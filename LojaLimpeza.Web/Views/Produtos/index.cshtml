@@ -1,0 +1,92 @@
+@model IEnumerable<LojaLimpeza.Web.Models.ProdutoViewModel>
+@using System.Globalization
+
+@{
+    ViewData["Title"] = "Gestão de Estoque";
+    var culturaBrasil = new CultureInfo("pt-BR");
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4 mt-4">
+    <h2>Catálogo de Produtos</h2>
+
+    <!-- Aqui está o botão corrigido apontando para o método Criar -->
+    <a asp-controller="Produtos" asp-action="Criar" class="btn btn-success">
+        + Novo Produto
+    </a>
+</div>
+
+<div class="card shadow">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome do Produto</th>
+                        <th>Preço Unitário</th>
+                        <th>Quantidade no Estoque</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.Id</td>
+
+                                <td class="fw-bold">
+                                    @item.Nome
+                                </td>
+
+                                <td>
+                                    @item.Preco.ToString("C", culturaBrasil)
+                                </td>
+
+                                <td>
+                                    @if (item.QuantidadeEstoque < 10)
+                                    {
+                                        <span class="badge bg-danger fs-6">
+                                            @item.QuantidadeEstoque
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-primary fs-6">
+                                            @item.QuantidadeEstoque
+                                        </span>
+                                    }
+                                </td>
+
+                                <td>
+                                    @if (item.Ativo)
+                                    {
+                                        <span class="badge bg-success">
+                                            Ativo
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">
+                                            Inativo
+                                        </span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center p-4">
+                                Nenhum produto encontrado.
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,35 @@
+@model LojaLimpeza.Web.Models.LoginViewModel
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-4">
+        <div class="card shadow">
+            <div class="card-body">
+                <h3 class="text-center mb-4">Acesso Administrativo</h3>
+                
+                <!-- Mostra o erro caso a senha esteja errada -->
+                @if (ViewBag.Erro != null)
+                {
+                    <div class="alert alert-danger">@ViewBag.Erro</div>
+                }
+
+                <!-- O formulário que envia os dados para o método POST do AuthController -->
+                <form asp-controller="Auth" asp-action="Login" method="post">
+                    <div class="mb-3">
+                        <label class="form-label">E-mail</label>
+                        <input asp-for="Email" class="form-control" type="email" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Palavra-passe</label>
+                        <input asp-for="Senha" class="form-control" type="password" required />
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Entrar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+    

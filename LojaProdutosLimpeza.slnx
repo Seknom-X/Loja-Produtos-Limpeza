@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="LojaLimpeza.API/LojaLimpeza.API.csproj" />
+  <Project Path="LojaLimpeza.Mobile/LojaLimpeza.Mobile.csproj" />
+  <Project Path="LojaLimpeza.Tests/LojaLimpeza.Tests.csproj" />
+  <Project Path="LojaLimpeza.Web/LojaLimpeza.Web.csproj" />
+</Solution>

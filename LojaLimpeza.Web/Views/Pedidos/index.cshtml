@@ -1,0 +1,137 @@
+@model IEnumerable<LojaLimpeza.Web.Models.PedidoViewModel>
+@using System.Globalization
+
+@{
+    ViewData["Title"] = "Gestão de Pedidos";
+    var culturaBrasil = new CultureInfo("pt-BR");
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4 mt-4">
+    <h2>Painel de Pedidos</h2>
+</div>
+
+@if (TempData["Sucesso"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+        <strong>Sucesso!</strong> @TempData["Sucesso"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+    </div>
+}
+
+@if (TempData["Erro"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+        <strong>Atenção!</strong> @TempData["Erro"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+    </div>
+}
+
+<div class="card shadow">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Nº Pedido</th>
+                        <th>Data</th>
+                        <th>Valor Total</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="fw-bold">#@item.Id</td>
+                                <td>
+                                    @if (item.DataPedido != default(DateTimeOffset))
+                                    {
+                                        @item.DataPedido.ToLocalTime().ToString("dd/MM/yyyy HH:mm", culturaBrasil)
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">Data indisponível</span>
+                                    }
+                                </td>
+                                <td class="text-success fw-bold">@item.ValorTotal.ToString("C", culturaBrasil)</td>
+                                <td>
+                                    @if (item.Status == 1)
+                                    {
+                                        <span class="badge bg-warning text-dark">Pendente</span>
+                                    }
+                                    else if (item.Status == 2)
+                                    {
+                                        <span class="badge bg-primary">Confirmado</span>
+                                    }
+                                    else if (item.Status == 3)
+                                    {
+                                        <span class="badge bg-info text-dark">Em Preparação</span>
+                                    }
+                                    else if (item.Status == 4)
+                                    {
+                                        <span class="badge bg-success">Concluído / Retirado</span>
+                                    }
+                                    else if (item.Status == 5)
+                                    {
+                                        <span class="badge bg-secondary">Cancelado</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger">Status desconhecido (@item.Status)</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.Status == 1)
+                                    {
+                                        <form asp-controller="Pedidos"
+                                              asp-action="Confirmar"
+                                              asp-route-id="@item.Id"
+                                              asp-antiforgery="false"
+                                              method="post" class="d-inline me-1">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn btn-sm btn-success">
+                                                Confirmar Pedido
+                                            </button>
+                                        </form>
+                                    }
+
+                                    @if (item.Status == 1 || item.Status == 2)
+                                    {
+                                        var avisoCancelamento = item.Status == 2
+                                            ? "Cancelar este pedido confirmado? Os produtos serao devolvidos ao estoque."
+                                            : "Cancelar este pedido pendente?";
+
+                                        <form asp-controller="Pedidos"
+                                              asp-action="Cancelar"
+                                              asp-route-id="@item.Id"
+                                              asp-antiforgery="false"
+                                              method="post" class="d-inline"
+                                              onsubmit="return confirm('@avisoCancelamento');">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                Cancelar Pedido
+                                            </button>
+                                        </form>
+                                    }
+                                    else if (item.Status != 1)
+                                    {
+                                        <span class="text-muted small">Nenhuma ação disponível</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center p-4">Nenhum pedido encontrado.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

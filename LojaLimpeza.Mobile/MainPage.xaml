@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="LojaLimpeza.Mobile.MainPage"
+             Title="💧 Catálogo de Limpeza">
+
+    <!-- Grid divide o ecrã em duas linhas: o cabeçalho em cima (Auto) e os produtos a ocupar o resto (*) -->
+    <Grid RowDefinitions="Auto, *">
+        
+        <!-- Cabeçalho -->
+        <!-- Cabeçalho -->
+        <VerticalStackLayout Grid.Row="0" Padding="20" Spacing="5">
+            <Label Text="Nossos Produtos" FontSize="24" FontAttributes="Bold" HorizontalOptions="Center" />
+            <Label Text="Escolha os melhores itens para a sua limpeza." FontSize="14" TextColor="Gray" HorizontalOptions="Center" />
+            
+            <!-- NOVO BOTÃO AQUI -->
+            <Button Text="🛒 Ver Carrinho" BackgroundColor="#ffc107" TextColor="Black" FontAttributes="Bold" Clicked="OnVerCarrinhoClicked" Margin="0,10,0,0"/>
+        </VerticalStackLayout>
+
+        <!-- Lista Grelha de Produtos -->
+        <CollectionView x:Name="ProdutosCollectionView" Grid.Row="1" Margin="10">
+            <!-- Layout em grelha com 2 colunas (Span="2") -->
+            <CollectionView.ItemsLayout>
+                <GridItemsLayout Orientation="Vertical" Span="2" HorizontalItemSpacing="10" VerticalItemSpacing="10" />
+            </CollectionView.ItemsLayout>
+            
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <!-- Aplicamos a opacidade aqui. Se estiver sem stock, fica "apagado" (0.5) -->
+                    <Frame CornerRadius="10" Padding="10" HasShadow="True" BorderColor="LightGray" Opacity="{Binding OpacidadeVisual}">
+                        <VerticalStackLayout Spacing="8">
+                            <Image Source="{Binding ImagemUrl}" HeightRequest="100" Aspect="AspectFit" />
+                            
+                            <Label Text="{Binding Nome}" FontAttributes="Bold" FontSize="16" HorizontalOptions="Center" HorizontalTextAlignment="Center" />
+                            <Label Text="{Binding PrecoFormatado}" TextColor="#28a745" FontAttributes="Bold" FontSize="16" HorizontalOptions="Center" />
+                            
+                            <!-- Botão Carrinho: Só aparece (IsVisible) se TEM stock -->
+                            <Button Text="+ Carrinho" 
+                                    IsVisible="{Binding TemEstoque}"
+                                    FontSize="14" Padding="5" CornerRadius="8" 
+                                    BackgroundColor="#0d6efd" TextColor="White"
+                                    Clicked="OnAdicionarCarrinhoClicked" />
+
+                            <!-- Etiqueta Esgotado: Só aparece (IsVisible) se NÃO tem stock -->
+                            <Label Text="⚠️ Esgotado" 
+                                   IsVisible="{Binding Esgotado}"
+                                   TextColor="#dc3545" FontAttributes="Bold" FontSize="16"
+                                   HorizontalOptions="Center" VerticalOptions="Center" 
+                                   HeightRequest="35" VerticalTextAlignment="Center"/>
+                                   
+                        </VerticalStackLayout>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+
+</ContentPage>

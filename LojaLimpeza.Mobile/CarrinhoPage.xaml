@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="LojaLimpeza.Mobile.CarrinhoPage"
+             Title="🛒 Meu Carrinho">
+
+    <Grid RowDefinitions="*, Auto">
+        <!-- Modernizámos de ListView para CollectionView -->
+        <CollectionView x:Name="ItensCollectionView" Grid.Row="0" Margin="10">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <StackLayout Orientation="Horizontal" Padding="15">
+                        <Label Text="{Binding Nome}" FontAttributes="Bold" HorizontalOptions="StartAndExpand" VerticalOptions="Center"/>
+                        <Label Text="{Binding PrecoFormatado}" TextColor="#28a745" FontAttributes="Bold" VerticalOptions="Center"/>
+                    </StackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- Rodapé de Checkout -->
+        <VerticalStackLayout Grid.Row="1" Padding="20" BackgroundColor="#f8f9fa" Spacing="15">
+            <Label x:Name="TotalLabel" FontSize="22" FontAttributes="Bold" HorizontalOptions="Center" />
+            <Button Text="Finalizar Pedido" 
+                    BackgroundColor="#198754" 
+                    TextColor="White" 
+                    FontAttributes="Bold" 
+                    CornerRadius="8" 
+                    HeightRequest="50"
+                    Clicked="OnFinalizarPedidoClicked"/>
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>
